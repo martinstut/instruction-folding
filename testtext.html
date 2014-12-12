@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Conditional Text Test</title>
+  <meta name="generator" content="Amaya, see http://www.w3.org/Amaya/" />
+  <link href="styles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<h1>Conditional Test Text</h1>
+
+<p>Select your computer's operating system:
+<strong class="setter set-windowsversion-vista">Windows Vista</strong>
+<strong class="setter set-windowsversion-7 var-default">Windows 7</strong>
+<strong class="setter set-windowsversion-8">Windows 8</strong></p>
+
+<p>Select your email client program:
+<strong class="setter set-emailclient-thunderbird var-default">Thunderbird</strong>
+<strong class="setter set-emailclient-outlook">Outlook</strong></p>
+
+<ol class="if-windowsversion-vista if-windowsversion-7">
+  <li>Click on the round windows symbol on the bottom left of the screen, which
+    used to be labelled "start" in earlier versions. A menu will open.</li>
+  <li>Click on "all programs".</li>
+  <li><span class="if-emailclient-thunderbird">Click on the blue-brown envelope icon "Mozilla Thunderbird".</span><span class="if-emailclient-outlook">Scroll down to the folder "Microsoft Office", open it, and click on "Outlook".</span>
+	</li>
+</ol>
+
+<ol class="if-windowsversion-8">
+  <li>If you are on the classic desktop, return to the tile menu by clicking on
+    the square Windows icon at the bottom left of the screen.</li>
+  <li><span class="if-emailclient-thunderbird">Look for the blue-brown envelope icon "Mozilla Thunderbird" and click on it.</span><span class="if-emailclient-outlook">Look for an icon labelled "Microsoft Outlook" and click
+    on it.</span></li>
+</ol>
+<script type="text/javascript" src="instruction-folding.js"></script>
+</body>
+</html>
