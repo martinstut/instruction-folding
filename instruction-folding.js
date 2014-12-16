@@ -1,5 +1,5 @@
 /* before the user can click anything, scan for elements with class="set-variable-value" */
-document.body.onload = performRecursive(document, scanForSet );
+window.addEventListener("load", function(){performRecursive(document, scanForSet );});
 function globalSetVarToVal(setVariable, setValue) {
 	/*	set variable to value for the entire document. 
 		this is the onclick event handler for set-variable-value class elements 
