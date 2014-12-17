@@ -1,10 +1,16 @@
 /* before the user can click anything, scan for elements with class="set-variable-value" */
-window.addEventListener("load", function(){performRecursive(document, scanForSet );});
+window.addEventListener("load", function(){
+		performRecursive(document, scanForSet );
+		/* FIXME: ### scanForSet does write cookies, but it should not!!!! */
+		processCookies();
+	}
+);
 function globalSetVarToVal(setVariable, setValue) {
 	/*	set variable to value for the entire document. 
 		this is the onclick event handler for set-variable-value class elements 
 	*/
-	performRecursive(document, function(workNode){ nodeSetVarVal(workNode, setVariable, setValue);});
+	performRecursive(document, function(workNode){ nodeSetVarVal(workNode, setVariable, setValue);}); /* hide/unhide elements */
+	setVarValCookie(setVariable, setValue) /* set cookie to store that value across sessions */
 }
 function nodeSetVarVal(workNode, setVariable, setValue) {
 	/*	apply to workNode all changes required for reflecting setting of setVariable to setValue,
@@ -77,6 +83,72 @@ function performRecursive(currentNode, f) {
 	var i;
 	for (i = 0; i < cns.length; i++) {
 		performRecursive(cns[i], f);
+	}
+}
+function setCookie(cname, cvalue, exdays) {
+	/* 2014-12-16 copied from http://www.w3schools.com/js/js_cookies.asp */
+	var d = new Date();
+	d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	var expires = "expires="+d.toUTCString();
+	document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+function getCookie(cname) {
+	/* 2014-12-16 copied from http://www.w3schools.com/js/js_cookies.asp */
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0; i<ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1);
+		if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
+	}
+	return "";
+}
+function cookieNamePrefix(){
+	/*	MST 2014-12-16
+		string constant that should avoid accidental matches with cookies set by other libraries */ 
+	return "TextFoldingZtre_"
+}
+function varName2cookieName(varName){
+	/*	MST 2014-12-16
+		create the cookie name given the name of the variable.
+		This function implements the cookie name convention	*/
+	return cookieNamePrefix()+varName;
+}
+function setVarValCookie(varName, newValue) {
+	/*	MST 2014-12-16
+		convenience function to set cookies the right way 
+		the number 30 is the cookie validity in days */
+	alert("About to set cookie "+varName2cookieName(varName)+"="+newValue)
+	setCookie(varName2cookieName(varName), newValue, 30) 
+}
+function cookieName2varName(cookieName){
+	/*	MST 2014-12-16
+		compute the variable name given the cookie name.
+		Must be the inverse of varName2cookieName
+		returns "" if cookieName is not matching
+	*/
+	var incomingPrefix = cookieName.substring(0,cookieNamePrefix().length);
+	if (!(incomingPrefix == cookieNamePrefix())) return "";
+	return cookieName.substring(cookieNamePrefix().length);
+}
+function processCookies(){
+	/*	read all cookies; if some are meant to set variables, set those variables. 
+		meant to be called once after load,
+		must be called _after_ (not before) scanForSet, because cookies should override defaults */
+	var cookieArray = document.cookie.split(';');
+	for(var i=0; i<cookieArray.length; i++) {
+		var currentCookie = cookieArray[i];
+		while (currentCookie.charAt(0)==' ') currentCookie = currentCookie.substring(1);
+		/* now, currentCookie is a name=value pair*/
+		var currentCookieArray = currentCookie.split('=');
+		var currentCookieName = currentCookieArray[0];
+		var currentCookieValue = currentCookieArray[1];
+		var currentVarName = cookieName2varName(currentCookieName)
+		if (currentVarName.length>0) {
+			/* variable found - set it! */
+			alert("Cookie found: "+currentCookie)
+			globalSetVarToVal(currentVarName, currentCookieValue)		
+		}
 	}
 }
 function singleClassString(classString) {
