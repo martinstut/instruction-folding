@@ -85,4 +85,3 @@ The `setter` class has no influence on the hiding logic, but is useful as a CSS 
 
 IMO the "show/hide explanation" use case requires too much HTML code. It should be easier than now for the author to write such cases.
 
-
