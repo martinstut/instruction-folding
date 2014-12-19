@@ -5,12 +5,12 @@ window.addEventListener("load", function(){
 		processCookies();
 	}
 );
-function globalSetVarToVal(setVariable, setValue) {
+function globalSetVarToVal(setVariable, setValue, setCookie=false) {
 	/*	set variable to value for the entire document. 
 		this is the onclick event handler for set-variable-value class elements 
 	*/
 	performRecursive(document, function(workNode){ nodeSetVarVal(workNode, setVariable, setValue);}); /* hide/unhide elements */
-	setVarValCookie(setVariable, setValue) /* set cookie to store that value across sessions */
+	if (setCookie) {setVarValCookie(setVariable, setValue) } /* set cookie to store that value across sessions */
 }
 function nodeSetVarVal(workNode, setVariable, setValue) {
 	/*	apply to workNode all changes required for reflecting setting of setVariable to setValue,
@@ -57,9 +57,8 @@ function scanForSet(currentNode) {
 	var settingClass; /* the class this node is a setter for. Intentionally left undefined here. */
 	classesSet.each( function(c) {
 		if (c.verb === "set") {
-			/* alert("setting onclick for " + c.to_s()); */
 			currentNode.addEventListener("click", function() {
-				globalSetVarToVal(c.variable, c.value);
+				globalSetVarToVal(c.variable, c.value, true);	/* do set the cookie, because this is the place where the user's click is processed */
 			});
 			settingClass = c;
 		}		
@@ -68,7 +67,7 @@ function scanForSet(currentNode) {
 		/* this node is a setter */
 		/* check whether it is the default value */
 		if (classesSet.containsStringClass("var-default")) {
-			globalSetVarToVal(settingClass.variable, settingClass.value)
+			globalSetVarToVal(settingClass.variable, settingClass.value, false)	/* Never ever set the cookie here!!! Setting the cookie would override cookie values by static default values. Don't do that! */
 		}
 	}
 }
@@ -118,7 +117,6 @@ function setVarValCookie(varName, newValue) {
 	/*	MST 2014-12-16
 		convenience function to set cookies the right way 
 		the number 30 is the cookie validity in days */
-	alert("About to set cookie "+varName2cookieName(varName)+"="+newValue)
 	setCookie(varName2cookieName(varName), newValue, 30) 
 }
 function cookieName2varName(cookieName){
@@ -146,8 +144,7 @@ function processCookies(){
 		var currentVarName = cookieName2varName(currentCookieName)
 		if (currentVarName.length>0) {
 			/* variable found - set it! */
-			alert("Cookie found: "+currentCookie)
-			globalSetVarToVal(currentVarName, currentCookieValue)		
+			globalSetVarToVal(currentVarName, currentCookieValue, false)	/* no need to set the cookie, because it is already set */
 		}
 	}
 }
