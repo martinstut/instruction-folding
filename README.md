@@ -14,6 +14,8 @@ A possible solution to this are class names. Every HTML node can be member of ze
 
 This is what I've implemented.
 
+**See this in action in http://www.stut-it.net/text-folding/testtext.html .**
+
 ## Using the code
 
 Here is what you need to do to use this code:
