@@ -12,6 +12,8 @@ Nowadays many web authors need to edit HTML inside Content Management Systems, s
 
 A possible solution to this are class names. Every HTML node can be member of zero or more classes, using code like `<ol class="class1 class2 class3"> ... </ol>`
 
+If instructions get longer, it is useful to keep the state across browser sessions. This can be done using cookies. Cookies can also be set by the calling environment to pre-set some variables.
+
 This is what I've implemented.
 
 **See this in action in http://www.stut-it.net/text-folding/testtext.html .**
